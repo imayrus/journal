@@ -44,13 +44,18 @@ func login() {
 			p, _ := reader.ReadString('\n')
 			password := strings.TrimSpace(p)
 			if val.Password == password {
-				journal()
+				fmt.Println("true")
 			} else {
 				fmt.Println("Enter wrong password")
 			}
 
+		} else {
+			fmt.Println("Username doesn't exits.")
+			break
 		}
+
 	}
+
 }
 
 func register() {
