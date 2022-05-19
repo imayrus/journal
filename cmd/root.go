@@ -17,6 +17,11 @@ var rootCmd = &cobra.Command{
 	},
 }
 
+func init() {
+	rootCmd.AddCommand(rootCmd)
+
+}
+
 func options() {
 	fmt.Println("Welcome to the journal. \nChoose the below option: \n\n1. Login \n2. Register \n3. Exit")
 	option := bufio.NewReader(os.Stdin)

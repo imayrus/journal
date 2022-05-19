@@ -2,10 +2,13 @@ package cmd
 
 import (
 	"bufio"
-	"fmt"
-	"os"
+	"encoding/json"
 	"strings"
 
+	"fmt"
+	"os"
+
+	"github.com/imayrus/journal/models"
 	"github.com/spf13/cobra"
 )
 
@@ -21,54 +24,92 @@ func init() {
 	rootCmd.AddCommand(loginCmd)
 }
 
-type LoginDetails struct {
-	UserName string
-	Password string
-}
+var LoggedInUser string
+var log []models.LoginDetails
 
-var log []LoginDetails
+// func login() {
+
+// reader := bufio.NewReader(os.Stdin)
+// fmt.Println("enter username")
+// u, _ := reader.ReadString('\n')
+// username := strings.TrimSpace(u)
+
+// 	for _, val := range log {
+// 		if val.UserName == username {
+// reader := bufio.NewReader(os.Stdin)
+// fmt.Println("enter password")
+// p, _ := reader.ReadString('\n')
+// password := strings.TrimSpace(p)
+// if val.Password == password {
+// 	journal()
+// } else {
+// 	fmt.Println("wrong password")
+// }
+
+// 		} else {
+// 			fmt.Println("Username doesn't exits.")
+// 			break
+// 		}
+
+// 	}
+
+// }
+var UserId int
 
 func login() {
-	log = append(log, LoginDetails{"abc", "def"})
-	log = append(log, LoginDetails{"surya", "prakash"})
+	if _, err := os.Stat("/tmp/journal/userList"); err == nil {
 
-	reader := bufio.NewReader(os.Stdin)
-	fmt.Println("enter username")
-	u, _ := reader.ReadString('\n')
-	username := strings.TrimSpace(u)
+		logs := []models.LoginDetails{}
+		f, err := os.Open("/tmp/journal/userList")
+		checkNilErr(err)
+		defer f.Close()
+		json.NewDecoder(f).Decode(&logs)
 
-	for _, val := range log {
-		if val.UserName == username {
-			reader := bufio.NewReader(os.Stdin)
-			fmt.Println("enter password")
-			p, _ := reader.ReadString('\n')
-			password := strings.TrimSpace(p)
-			if val.Password == password {
-				fmt.Println("true")
+		reader := bufio.NewReader(os.Stdin)
+		fmt.Println("enter username")
+		u, _ := reader.ReadString('\n')
+		username := strings.TrimSpace(u)
+
+		for _, v := range logs {
+			if v.UserName == username {
+
+				pa := bufio.NewReader(os.Stdin)
+				fmt.Println("enter password")
+				p, _ := pa.ReadString('\n')
+				password := strings.TrimSpace(p)
+
+				if v.Password == password {
+					LoggedInUser = username
+					fmt.Println("Welcome!", v.UserName)
+					v.ID = UserId
+					journal(UserId)
+				} else {
+					fmt.Println("Wrong Password")
+					login()
+				}
 			} else {
-				fmt.Println("Enter wrong password")
+				fmt.Println("Wrong Username ")
+				register()
 			}
-
-		} else {
-			fmt.Println("Username doesn't exits.")
-			break
 		}
 
+	} else {
+		register()
 	}
-
 }
 
-func register() {
-	reader := bufio.NewReader(os.Stdin)
-	fmt.Println("enter username")
-	username, _ := reader.ReadString('\n')
-	newusername := strings.TrimSpace(username)
-	password := bufio.NewReader(os.Stdin)
-	fmt.Println("enter password")
-	pa, _ := password.ReadString('\n')
-	newpassword := strings.TrimSpace(pa)
+// func credentials() (string, string) {
+// 	reader := bufio.NewReader(os.Stdin)
 
-	log = append(log, LoginDetails{newusername, newpassword})
-	fmt.Println("username and password added successfully \nlogin again ")
-	login()
-}
+// 	fmt.Println("enter username")
+// 	u, _ := reader.ReadString('\n')
+// 	username := strings.TrimSpace(u)
+
+// 	pa := bufio.NewReader(os.Stdin)
+// 	fmt.Println("enter password")
+// 	p, _ := pa.ReadString('\n')
+// 	password := strings.TrimSpace(p)
+
+// 	return username, password
+
+// }

@@ -1,0 +1,34 @@
+Root - /tmp
+
+Files to be created:
+
+1. LoggedInUser
+2. UserList
+3. Individual User's Journal entry
+
+Structure:
+
+Root path of your project - /tmp/journal
+
+1. loggedInUser - /tmp/journal/LoggedInUser
+2. userList - /tmp/journal/userList
+3. Individual User Journal Entry - /tmp/journal/entries ->
+
+    * user1: /tmp/journal/entries/<user1 id + username>
+    * user2: /tmp/journal/entries/<user2 id + username> and so on...
+
+
+Usage:
+
+1. Landing Page (login/resgister): check if loggedInUser file exists. If not,
+    show landing page. If exists, check if file is empty. If yes, show landing,
+    or else use the loggedInUser deatails for saving entries
+
+2. Login: if user exists in userList, allow, otherwise deny
+
+3. Journal Entry: 
+    * View: Show all the contents of file at once.
+    * Create: Create a new file.
+    * Update: Append into existing file. If file doesn't exist, show warning and allow user
+            to create instead.
+    * Delete: Delete the file.
